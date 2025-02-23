@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Assistant</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Type your shopping list...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+        const ws = new WebSocket(`ws://${window.location.host}/ws/${userId}`);
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('messageInput');
+
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            appendMessage(data.message, data.timestamp, data.is_bot);
+        };
+
+        function appendMessage(message, timestamp, isBot) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isBot ? 'bot' : 'user'}`;
+            messageDiv.innerHTML = `
+                <div class="message-content">${message}</div>
+                <div class="message-timestamp">${timestamp}</div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message) {
+                const timestamp = new Date().toLocaleString();
+                ws.send(JSON.stringify({
+                    message: message,
+                    timestamp: timestamp
+                }));
+                appendMessage(message, timestamp, false);
+                messageInput.value = '';
+            }
+        }
+
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
