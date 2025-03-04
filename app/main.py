@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from app.config import settings
-from app.models.schemas import PurchaseConfirmation, ShoppingList
+from app.models.schemas import ConversationState, PurchaseConfirmation, ShoppingList
 from app.services.cart_service import CartService
 from app.services.llm_service import LLMService
 from app.services.store_service import StoreService

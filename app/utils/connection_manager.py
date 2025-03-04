@@ -3,6 +3,8 @@ from datetime import datetime
 
 from fastapi import WebSocket
 
+from app.models.schemas import UserSession
+
 
 class ConnectionManager:
     def __init__(self):

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel
 
@@ -7,7 +7,7 @@ from pydantic import BaseModel
 class ShoppingItem(BaseModel):
     name: str
     quantity: int
-    specifications: Optional[dict]
+    specifications: dict | None = None
 
 
 class ShoppingList(BaseModel):
